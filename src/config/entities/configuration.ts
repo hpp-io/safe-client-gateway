@@ -109,21 +109,6 @@ export default () => ({
       zerion: {
         apiKey: process.env.ZERION_API_KEY,
         baseUri: process.env.ZERION_BASE_URI || 'https://api.zerion.io',
-        chains: {
-          1: { chainName: 'ethereum' },
-          10: { chainName: 'optimism' },
-          100: { chainName: 'xdai' },
-          1101: { chainName: 'polygon-zkevm' },
-          1313161554: { chainName: 'aurora' },
-          137: { chainName: 'polygon' },
-          324: { chainName: 'zksync-era' },
-          42161: { chainName: 'arbitrum' },
-          42220: { chainName: 'celo' },
-          43114: { chainName: 'avalanche' },
-          534352: { chainName: 'scroll' },
-          56: { chainName: 'binance-smart-chain' },
-          8453: { chainName: 'base' },
-        },
         currencies: [
           'USD',
           'EUR',
@@ -291,8 +276,10 @@ export default () => ({
   },
   features: {
     email: process.env.FF_EMAIL?.toLowerCase() === 'true',
-    zerionBalancesChainIds:
-      process.env.FF_ZERION_BALANCES_CHAIN_IDS?.split(',') ?? [],
+    // Support both new (FF_ZERION_ENABLED) and legacy (FF_ZERION_BALANCES_CHAIN_IDS) env vars
+    zerionBalancesEnabled:
+      !!process.env.FF_ZERION_ENABLED ||
+      !!process.env.FF_ZERION_BALANCES_CHAIN_IDS,
     zerionPositions:
       process.env.FF_ZERION_POSITIONS_DISABLED?.toLowerCase() !== 'true',
     debugLogs: process.env.FF_DEBUG_LOGS?.toLowerCase() === 'true',
@@ -533,6 +520,7 @@ export default () => ({
   },
   safeTransaction: {
     useVpcUrl: process.env.USE_TX_SERVICE_VPC_URL?.toLowerCase() === 'true',
+    apiKey: process.env.TX_SERVICE_API_KEY,
   },
   safeWebApp: {
     baseUri: process.env.SAFE_WEB_APP_BASE_URI || 'https://app.safe.global',
